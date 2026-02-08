@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Cargill AI Assistant</title>
+<title>AI Chat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
@@ -24,54 +24,42 @@ body {
   height: 100vh;
 }
 
-/* ===== LAYOUT ===== */
 .app {
   display: grid;
   grid-template-columns: 260px 1fr 260px;
   height: 100vh;
 }
 
-/* ===== SIDEBARS ===== */
 .sidebar {
-  background: #ffffff;
-  border-right: 1px solid #dcdcdc;
+  background: #fff;
+  border-right: 1px solid #ddd;
   padding: 20px;
   font-size: 14px;
 }
 
 .sidebar.right {
+  border-left: 1px solid #ddd;
   border-right: none;
-  border-left: 1px solid #dcdcdc;
 }
 
 .sidebar h3 {
   margin-top: 0;
-  color: var(--green);
-  font-size: 16px;
+  color: #333;
 }
 
-.sidebar .item {
-  margin-bottom: 12px;
-  padding: 10px;
-  background: var(--light);
-  border-radius: 6px;
-  font-weight: 500;
-}
-
-/* ===== CHAT ===== */
 .chat {
   display: flex;
   flex-direction: column;
   max-width: 520px;
   margin: 0 auto;
-  background: var(--white);
-  border-left: 1px solid #dcdcdc;
-  border-right: 1px solid #dcdcdc;
+  background: #fff;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
 }
 
 .header {
-  background: var(--green);
-  color: white;
+  background: #222;
+  color: #fff;
   padding: 15px;
   font-weight: 600;
 }
@@ -80,8 +68,6 @@ body {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  background-image: radial-gradient(#d1d9d7 0.5px, transparent 0.5px);
-  background-size: 20px 20px;
 }
 
 .msg {
@@ -90,30 +76,20 @@ body {
   padding: 12px 14px;
   border-radius: 10px;
   font-size: 14px;
-  animation: fade 0.2s ease;
-}
-
-@keyframes fade {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; }
 }
 
 .user {
   margin-left: auto;
   background: var(--light);
-  color: var(--green);
-  border-bottom-right-radius: 3px;
 }
 
 .bot {
-  background: white;
+  background: #fff;
   border: 1px solid #e0e0e0;
-  color: #333;
-  border-bottom-left-radius: 3px;
 }
 
 .bot::before {
-  content: "Asistente";
+  content: "AI";
   display: block;
   font-size: 11px;
   color: #888;
@@ -135,12 +111,11 @@ input {
 }
 
 button {
-  background: var(--green);
+  background: #222;
   color: white;
   border: none;
   padding: 0 18px;
   border-radius: 6px;
-  font-weight: 600;
   cursor: pointer;
 }
 </style>
@@ -152,19 +127,18 @@ button {
 
   <!-- LEFT -->
   <div class="sidebar">
-    <h3>Contexto Operativo</h3>
-    <div class="item">📦 Área: Logística</div>
-    <div class="item">🚚 Operación: Distribución</div>
-    <div class="item">🏭 Planta: Managua</div>
+    <h3>Sesión</h3>
+    <p>🧠 Memoria activa</p>
+    <p>💬 Conversación libre</p>
   </div>
 
   <!-- CHAT -->
   <div class="chat">
-    <div class="header">Asistente de Operaciones Cargill</div>
+    <div class="header">AI Assistant</div>
     <div class="messages" id="messages"></div>
 
     <div class="input">
-      <input id="input" placeholder="Consulta logística, rutas, inventario..." 
+      <input id="input" placeholder="Escribe lo que sea..."
              onkeypress="if(event.key==='Enter') enviar()">
       <button onclick="enviar()">Enviar</button>
     </div>
@@ -173,9 +147,8 @@ button {
   <!-- RIGHT -->
   <div class="sidebar right">
     <h3>Estado</h3>
-    <div class="item">🟢 Sistema activo</div>
-    <div class="item">📊 Contexto acumulado</div>
-    <div class="item">🔒 Uso interno</div>
+    <p>🟢 Online</p>
+    <p>📚 Aprende en la conversación</p>
   </div>
 
 </div>
@@ -184,11 +157,18 @@ button {
 const messagesBox = document.getElementById("messages");
 const input = document.getElementById("input");
 
+/* ===== MEMORIA ===== */
 const historial = [
   {
     role: "system",
-    content:
-      "Eres un Asistente Virtual experto en Logística y Operaciones para Cargill. Responde en español, de forma clara y profesional."
+    content: `
+Eres un asistente de conversación general.
+Hablas español natural.
+Respondes de forma clara y breve, salvo que el usuario pida más detalle.
+Puedes hablar de cualquier tema.
+Recuerdas el contexto de la conversación y lo usas para responder mejor.
+No te presentes ni expliques reglas.
+`
   }
 ];
 
@@ -203,7 +183,7 @@ async function enviar() {
   historial.push({ role: "user", content: text });
 
   const tempId = "t" + Date.now();
-  messagesBox.innerHTML += `<div class="msg bot" id="${tempId}">Escribiendo...</div>`;
+  messagesBox.innerHTML += `<div class="msg bot" id="${tempId}">...</div>`;
   messagesBox.scrollTop = messagesBox.scrollHeight;
 
   const res = await fetch("/api/chat", {
