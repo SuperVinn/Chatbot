@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         messages: [{ role: "user", content: prompt }]
       })
     });
-
+    
     const data = await response.json();
 
     if (data.choices && data.choices[0]) {
