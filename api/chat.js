@@ -1,8 +1,7 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ reply: 'Método no permitido' });
+  if (req.method !== 'POST') return res.status(405).json({ reply: 'Denegado' });
 
   try {
-    // Manejo de body robusto para evitar errores de API
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const { prompt } = body;
 
@@ -14,18 +13,20 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile",
-        messages: [{ role: "user", content: prompt }]
+        messages: [
+          { 
+            role: "system", 
+            content: "Eres un Asistente Virtual experto en Logística y Operaciones para Cargill. Tu tono es profesional, eficiente y servicial. Ayudas a los empleados con dudas sobre optimización de rutas, gestión de suministros y protocolos de seguridad alimentaria. Responde de forma concisa en español." 
+          },
+          { role: "user", content: prompt }
+        ]
       })
     });
 
     const data = await response.json();
+    res.status(200).json({ reply: data.choices[0].message.content });
 
-    if (data.choices && data.choices[0]) {
-      res.status(200).json({ reply: data.choices[0].message.content });
-    } else {
-      res.status(500).json({ reply: "Error de Groq: " + (data.error?.message || "Respuesta vacía") });
-    }
   } catch (error) {
-    res.status(500).json({ reply: "Error en el servidor: " + error.message });
+    res.status(500).json({ reply: "Error de servidor." });
   }
 }

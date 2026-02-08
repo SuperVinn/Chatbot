@@ -3,114 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat Pro</title>
+    <title>Cargill AI Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --cargill-green: #005f4b;
+            --cargill-light-green: #e6f0ee;
+            --bg-gray: #f4f7f6;
+            --white: #ffffff;
+        }
         * { box-sizing: border-box; }
         body { 
-            margin: 0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            margin: 0; font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--bg-gray); 
+            display: flex; justify-content: center; align-items: center; height: 100vh; 
         }
-        #chat-card { 
-            width: 100%; 
-            max-width: 450px; 
-            height: 90vh; 
-            background: rgba(30, 41, 59, 0.7); 
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            display: flex; 
-            flex-direction: column; 
-            border-radius: 20px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            overflow: hidden;
+        #chat-window { 
+            width: 100%; max-width: 500px; height: 90vh; 
+            background: var(--white); display: flex; flex-direction: column; 
+            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden;
+            border: 1px solid #d1d9d7;
         }
         #header { 
-            padding: 20px; 
-            background: rgba(15, 23, 42, 0.5); 
-            text-align: center; 
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 20px; background: var(--cargill-green); color: white; 
+            display: flex; align-items: center; gap: 10px;
         }
-        #header h2 { margin: 0; font-size: 18px; color: #3b82f6; letter-spacing: 1px; }
-        
+        .status-dot { width: 10px; height: 10px; background: #4dfd4d; border-radius: 50%; box-shadow: 0 0 5px #4dfd4d; }
         #messages { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            scrollbar-width: none; 
+            flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px;
+            background-image: radial-gradient(#d1d9d7 0.5px, transparent 0.5px); background-size: 20px 20px;
         }
-        #messages::-webkit-scrollbar { display: none; }
-
         .msg { 
-            padding: 12px 16px; 
-            border-radius: 15px; 
-            max-width: 80%; 
-            font-size: 15px; 
-            line-height: 1.4; 
-            animation: pop 0.3s ease-out;
+            padding: 12px 16px; border-radius: 10px; max-width: 85%; font-size: 14px; line-height: 1.5;
+            animation: slideIn 0.3s ease; 
         }
-        @keyframes pop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        .user { 
-            background: #2563eb; 
-            color: white; 
-            align-self: flex-end; 
-            border-bottom-right-radius: 2px; 
-        }
-        .bot { 
-            background: #334155; 
-            color: #e2e8f0; 
-            align-self: flex-start; 
-            border-bottom-left-radius: 2px; 
-        }
-
-        .input-area { 
-            padding: 20px; 
-            background: rgba(15, 23, 42, 0.5); 
-            display: flex; 
-            gap: 10px; 
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .user { background: var(--cargill-light-green); color: var(--cargill-green); align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 500; }
+        .bot { background: var(--white); color: #333; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .input-area { padding: 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: var(--white); }
         input { 
-            flex: 1; 
-            padding: 12px 15px; 
-            border-radius: 12px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            background: #0f172a; 
-            color: white; 
-            outline: none; 
+            flex: 1; padding: 12px; border-radius: 6px; border: 1px solid #ccc; outline: none; transition: 0.2s;
         }
-        input:focus { border-color: #3b82f6; }
-        
+        input:focus { border-color: var(--cargill-green); box-shadow: 0 0 0 2px rgba(0,95,75,0.1); }
         button { 
-            background: #2563eb; 
-            color: white; 
-            border: none; 
-            padding: 12px 20px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.3s;
+            background: var(--cargill-green); color: white; border: none; padding: 0 20px; 
+            border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;
         }
-        button:hover { background: #1d4ed8; transform: translateY(-1px); }
+        button:hover { background: #004a3a; }
     </style>
 </head>
 <body>
-    <div id="chat-card">
-        <div id="header"><h2>🤖 GEMINI AI CLONE</h2></div>
+    <div id="chat-window">
+        <div id="header">
+            <div class="status-dot"></div>
+            <div style="font-size: 16px; font-weight: 600;">Asistente de Operaciones Cargill</div>
+        </div>
         <div id="messages"></div>
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="Escribe aquí..." onkeypress="if(event.key === 'Enter') enviar()">
+            <input type="text" id="userInput" placeholder="Consulte sobre rutas, inventario o logística..." onkeypress="if(event.key === 'Enter') enviar()">
             <button onclick="enviar()">Enviar</button>
         </div>
     </div>
-
     <script>
         async function enviar() {
             const input = document.getElementById('userInput');
@@ -118,14 +71,12 @@
             const text = input.value.trim();
             if(!text) return;
 
-            // Mensaje Usuario
             box.innerHTML += `<div class="msg user">${text}</div>`;
             input.value = "";
             box.scrollTop = box.scrollHeight;
 
-            // Efecto "Pensando..."
-            const tempId = "temp-" + Date.now();
-            box.innerHTML += `<div class="msg bot" id="${tempId}">...</div>`;
+            const tempId = "t-" + Date.now();
+            box.innerHTML += `<div class="msg bot" id="${tempId}">Escribiendo...</div>`;
             box.scrollTop = box.scrollHeight;
 
             try {
@@ -137,7 +88,7 @@
                 const data = await response.json();
                 document.getElementById(tempId).innerText = data.reply;
             } catch (e) {
-                document.getElementById(tempId).innerText = "Error de conexión";
+                document.getElementById(tempId).innerText = "Error de red. Intente de nuevo.";
             }
             box.scrollTop = box.scrollHeight;
         }
