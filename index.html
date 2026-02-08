@@ -36,13 +36,14 @@
             input.value = "";
 
             try {
-                // Llamamos a nuestra API interna de Vercel
                 const response = await fetch("/api/chat", {
                     method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ prompt: text })
                 });
                 const data = await response.json();
-                box.innerHTML += `<div class="msg bot">${data.text}</div>`;
+                // AQUÍ ESTABA EL ERROR: Ahora usamos data.reply
+                box.innerHTML += `<div class="msg bot">${data.reply || "Sin respuesta"}</div>`;
             } catch (e) {
                 box.innerHTML += `<div class="msg bot" style="color:red">Error de conexión</div>`;
             }
