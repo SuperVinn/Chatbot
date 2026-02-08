@@ -15,25 +15,29 @@
   --white: #fff;
 }
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--bg);
-  height: 100vh;
+* {
+  box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+}
+
+/* ===== LAYOUT ===== */
 .app {
   display: grid;
   grid-template-columns: 260px 1fr 260px;
   height: 100vh;
 }
 
+/* ===== SIDEBARS ===== */
 .sidebar {
   background: #fff;
-  border-right: 1px solid #ddd;
   padding: 20px;
+  border-right: 1px solid #ddd;
   font-size: 14px;
 }
 
@@ -42,11 +46,7 @@ body {
   border-right: none;
 }
 
-.sidebar h3 {
-  margin-top: 0;
-  color: #333;
-}
-
+/* ===== CHAT ===== */
 .chat {
   display: flex;
   flex-direction: column;
@@ -62,12 +62,14 @@ body {
   color: #fff;
   padding: 15px;
   font-weight: 600;
+  text-align: center;
 }
 
 .messages {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .msg {
@@ -96,11 +98,13 @@ body {
   margin-bottom: 4px;
 }
 
+/* ===== INPUT ===== */
 .input {
   display: flex;
-  padding: 15px;
   gap: 10px;
+  padding: 15px;
   border-top: 1px solid #ddd;
+  background: #fff;
 }
 
 input {
@@ -108,83 +112,55 @@ input {
   padding: 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 16px;
 }
 
 button {
   background: #222;
-  color: white;
+  color: #fff;
   border: none;
   padding: 0 18px;
   border-radius: 6px;
   cursor: pointer;
+}
 
-  /* ===== MOBILE FIX (NO CSS FILE) ===== */
+/* ========================= */
+/*        MOBILE FIX         */
+/* ========================= */
 @media (max-width: 768px) {
 
-  /* 3 columnas → 1 columna */
   .app {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 
-  /* Ocultar laterales */
   .sidebar {
-    display: none !important;
+    display: none;
   }
 
-  /* Chat full width */
   .chat {
-    max-width: 100% !important;
-    margin: 0 !important;
-    border-left: none !important;
-    border-right: none !important;
+    max-width: 100%;
+    margin: 0;
+    border: none;
   }
 
-  /* Header más compacto */
-  .header {
-    text-align: center;
-    font-size: 16px;
-    padding: 12px !important;
-  }
-
-  /* Mensajes más cómodos */
   .messages {
-    padding: 14px !important;
+    padding: 14px;
   }
 
-  /* Burbujas grandes */
   .msg {
-    max-width: 90% !important;
-    font-size: 15px !important;
+    max-width: 90%;
+    font-size: 15px;
   }
 
-  /* Input fijo abajo */
   .input {
     position: sticky;
     bottom: 0;
-    background: #fff;
-    padding: 10px !important;
-  }
-
-  /* Evita zoom en iOS */
-  input {
-    font-size: 16px !important;
+    padding: 10px;
   }
 
   button {
-    padding: 0 14px !important;
+    padding: 0 14px;
   }
-}
-
-/* Scroll correcto en celular */
-html, body {
-  height: 100%;
-  overflow: hidden;
-}
-
-.messages {
-  -webkit-overflow-scrolling: touch;
-}
-
 }
 </style>
 </head>
@@ -193,14 +169,12 @@ html, body {
 
 <div class="app">
 
-  <!-- LEFT -->
   <div class="sidebar">
     <h3>Sesión</h3>
     <p>🧠 Memoria activa</p>
     <p>💬 Conversación libre</p>
   </div>
 
-  <!-- CHAT -->
   <div class="chat">
     <div class="header">AI Assistant</div>
     <div class="messages" id="messages"></div>
@@ -212,11 +186,10 @@ html, body {
     </div>
   </div>
 
-  <!-- RIGHT -->
   <div class="sidebar right">
     <h3>Estado</h3>
     <p>🟢 Online</p>
-    <p>📚 Aprende en la conversación</p>
+    <p>📚 Memoria activa</p>
   </div>
 
 </div>
@@ -225,17 +198,15 @@ html, body {
 const messagesBox = document.getElementById("messages");
 const input = document.getElementById("input");
 
-/* ===== MEMORIA ===== */
 const historial = [
   {
     role: "system",
     content: `
 Eres un asistente de conversación general.
 Hablas español natural.
-Respondes de forma clara y breve, salvo que el usuario pida más detalle.
+Respondes de forma clara y breve.
 Puedes hablar de cualquier tema.
-Recuerdas el contexto de la conversación y lo usas para responder mejor.
-No te presentes ni expliques reglas.
+Recuerdas el contexto de la conversación.
 `
   }
 ];
@@ -264,9 +235,6 @@ async function enviar() {
   document.getElementById(tempId).innerText = data.reply;
 
   historial.push({ role: "assistant", content: data.reply });
-
-  
-
 }
 </script>
 
