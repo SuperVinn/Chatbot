@@ -1,97 +1,223 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cargill AI Assistant</title>
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --cargill-green: #005f4b;
-            --cargill-light-green: #e6f0ee;
-            --bg-gray: #f4f7f6;
-            --white: #ffffff;
-        }
-        * { box-sizing: border-box; }
-        body { 
-            margin: 0; font-family: 'Segoe UI', sans-serif; 
-            background-color: var(--bg-gray); 
-            display: flex; justify-content: center; align-items: center; height: 100vh; 
-        }
-        #chat-window { 
-            width: 100%; max-width: 500px; height: 90vh; 
-            background: var(--white); display: flex; flex-direction: column; 
-            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden;
-            border: 1px solid #d1d9d7;
-        }
-        #header { 
-            padding: 15px 20px; background: var(--cargill-green); color: white; 
-            display: flex; align-items: center; gap: 10px;
-        }
-        .status-dot { width: 10px; height: 10px; background: #4dfd4d; border-radius: 50%; box-shadow: 0 0 5px #4dfd4d; }
-        #messages { 
-            flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px;
-            background-image: radial-gradient(#d1d9d7 0.5px, transparent 0.5px); background-size: 20px 20px;
-        }
-        .msg { 
-            padding: 12px 16px; border-radius: 10px; max-width: 85%; font-size: 14px; line-height: 1.5;
-            animation: slideIn 0.3s ease; 
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .user { background: var(--cargill-light-green); color: var(--cargill-green); align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 500; }
-        .bot { background: var(--white); color: #333; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .input-area { padding: 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: var(--white); }
-        input { 
-            flex: 1; padding: 12px; border-radius: 6px; border: 1px solid #ccc; outline: none; transition: 0.2s;
-        }
-        input:focus { border-color: var(--cargill-green); box-shadow: 0 0 0 2px rgba(0,95,75,0.1); }
-        button { 
-            background: var(--cargill-green); color: white; border: none; padding: 0 20px; 
-            border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;
-        }
-        button:hover { background: #004a3a; }
-    </style>
+<meta charset="UTF-8">
+<title>Cargill AI Assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --green: #005f4b;
+  --light: #e6f0ee;
+  --bg: #f4f7f6;
+  --white: #fff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  height: 100vh;
+}
+
+/* ===== LAYOUT ===== */
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  height: 100vh;
+}
+
+/* ===== SIDEBARS ===== */
+.sidebar {
+  background: #ffffff;
+  border-right: 1px solid #dcdcdc;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.sidebar.right {
+  border-right: none;
+  border-left: 1px solid #dcdcdc;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+  color: var(--green);
+  font-size: 16px;
+}
+
+.sidebar .item {
+  margin-bottom: 12px;
+  padding: 10px;
+  background: var(--light);
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* ===== CHAT ===== */
+.chat {
+  display: flex;
+  flex-direction: column;
+  max-width: 520px;
+  margin: 0 auto;
+  background: var(--white);
+  border-left: 1px solid #dcdcdc;
+  border-right: 1px solid #dcdcdc;
+}
+
+.header {
+  background: var(--green);
+  color: white;
+  padding: 15px;
+  font-weight: 600;
+}
+
+.messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-image: radial-gradient(#d1d9d7 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+}
+
+.msg {
+  max-width: 75%;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  animation: fade 0.2s ease;
+}
+
+@keyframes fade {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; }
+}
+
+.user {
+  margin-left: auto;
+  background: var(--light);
+  color: var(--green);
+  border-bottom-right-radius: 3px;
+}
+
+.bot {
+  background: white;
+  border: 1px solid #e0e0e0;
+  color: #333;
+  border-bottom-left-radius: 3px;
+}
+
+.bot::before {
+  content: "Asistente";
+  display: block;
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.input {
+  display: flex;
+  padding: 15px;
+  gap: 10px;
+  border-top: 1px solid #ddd;
+}
+
+input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: var(--green);
+  color: white;
+  border: none;
+  padding: 0 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+</style>
 </head>
+
 <body>
-    <div id="chat-window">
-        <div id="header">
-            <div class="status-dot"></div>
-            <div style="font-size: 16px; font-weight: 600;">Asistente de Operaciones Cargill</div>
-        </div>
-        <div id="messages"></div>
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Consulte sobre rutas, inventario o logística..." onkeypress="if(event.key === 'Enter') enviar()">
-            <button onclick="enviar()">Enviar</button>
-        </div>
+
+<div class="app">
+
+  <!-- LEFT -->
+  <div class="sidebar">
+    <h3>Contexto Operativo</h3>
+    <div class="item">📦 Área: Logística</div>
+    <div class="item">🚚 Operación: Distribución</div>
+    <div class="item">🏭 Planta: Managua</div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat">
+    <div class="header">Asistente de Operaciones Cargill</div>
+    <div class="messages" id="messages"></div>
+
+    <div class="input">
+      <input id="input" placeholder="Consulta logística, rutas, inventario..." 
+             onkeypress="if(event.key==='Enter') enviar()">
+      <button onclick="enviar()">Enviar</button>
     </div>
-    <script>
-        async function enviar() {
-            const input = document.getElementById('userInput');
-            const box = document.getElementById('messages');
-            const text = input.value.trim();
-            if(!text) return;
+  </div>
 
-            box.innerHTML += `<div class="msg user">${text}</div>`;
-            input.value = "";
-            box.scrollTop = box.scrollHeight;
+  <!-- RIGHT -->
+  <div class="sidebar right">
+    <h3>Estado</h3>
+    <div class="item">🟢 Sistema activo</div>
+    <div class="item">📊 Contexto acumulado</div>
+    <div class="item">🔒 Uso interno</div>
+  </div>
 
-            const tempId = "t-" + Date.now();
-            box.innerHTML += `<div class="msg bot" id="${tempId}">Escribiendo...</div>`;
-            box.scrollTop = box.scrollHeight;
+</div>
 
-            try {
-                const response = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ prompt: text })
-                });
-                const data = await response.json();
-                document.getElementById(tempId).innerText = data.reply;
-            } catch (e) {
-                document.getElementById(tempId).innerText = "Error de red. Intente de nuevo.";
-            }
-            box.scrollTop = box.scrollHeight;
-        }
-    </script>
+<script>
+const messagesBox = document.getElementById("messages");
+const input = document.getElementById("input");
+
+const historial = [
+  {
+    role: "system",
+    content:
+      "Eres un Asistente Virtual experto en Logística y Operaciones para Cargill. Responde en español, de forma clara y profesional."
+  }
+];
+
+async function enviar() {
+  const text = input.value.trim();
+  if (!text) return;
+
+  messagesBox.innerHTML += `<div class="msg user">${text}</div>`;
+  input.value = "";
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+
+  historial.push({ role: "user", content: text });
+
+  const tempId = "t" + Date.now();
+  messagesBox.innerHTML += `<div class="msg bot" id="${tempId}">Escribiendo...</div>`;
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages: historial })
+  });
+
+  const data = await res.json();
+  document.getElementById(tempId).innerText = data.reply;
+
+  historial.push({ role: "assistant", content: data.reply });
+}
+</script>
+
 </body>
 </html>
