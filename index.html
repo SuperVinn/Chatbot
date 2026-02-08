@@ -117,6 +117,74 @@ button {
   padding: 0 18px;
   border-radius: 6px;
   cursor: pointer;
+
+  /* ===== MOBILE FIX (NO CSS FILE) ===== */
+@media (max-width: 768px) {
+
+  /* 3 columnas → 1 columna */
+  .app {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ocultar laterales */
+  .sidebar {
+    display: none !important;
+  }
+
+  /* Chat full width */
+  .chat {
+    max-width: 100% !important;
+    margin: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  /* Header más compacto */
+  .header {
+    text-align: center;
+    font-size: 16px;
+    padding: 12px !important;
+  }
+
+  /* Mensajes más cómodos */
+  .messages {
+    padding: 14px !important;
+  }
+
+  /* Burbujas grandes */
+  .msg {
+    max-width: 90% !important;
+    font-size: 15px !important;
+  }
+
+  /* Input fijo abajo */
+  .input {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding: 10px !important;
+  }
+
+  /* Evita zoom en iOS */
+  input {
+    font-size: 16px !important;
+  }
+
+  button {
+    padding: 0 14px !important;
+  }
+}
+
+/* Scroll correcto en celular */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.messages {
+  -webkit-overflow-scrolling: touch;
+}
+
 }
 </style>
 </head>
@@ -196,6 +264,9 @@ async function enviar() {
   document.getElementById(tempId).innerText = data.reply;
 
   historial.push({ role: "assistant", content: data.reply });
+
+  
+
 }
 </script>
 
